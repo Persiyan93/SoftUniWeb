@@ -6,13 +6,7 @@ using System.Threading.Tasks;
 
 namespace HTTP
 {
-    internal class HttpException:Exception
+    class SameSyteType
     {
-        public HttpException(string message)
-            :base(message)
-        {
-
-
-        }
     }
 }

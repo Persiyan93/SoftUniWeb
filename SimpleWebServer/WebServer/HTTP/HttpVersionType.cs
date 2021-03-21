@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace HTTP
 {
-    /// <summary>
-    /// Constains constants.
-    /// </summary>
-    public static class HtttpConstants
+  public enum HttpVersionType
     {
-        public const string NewLine = "\r\n";
+        Http10=10,
+        Http11=11,
+        Http20=20,
+
         
     }
 }

@@ -43,10 +43,16 @@ namespace HTTP
             {
                 byte[] requestBytes = new byte [1000];
                 int bytesRead = await networkStream.ReadAsync(requestBytes, 0, requestBytes.Length);
-                string RequestAsString = Encoding.UTF8.GetString(requestBytes,0,bytesRead);
-                Console.WriteLine(RequestAsString);
+                string requestAsString = Encoding.UTF8.GetString(requestBytes,0,bytesRead);
+                Console.WriteLine(requestAsString);
+                var request = new HttpRequest(requestAsString);
+                string newSessionId = null;
+                if ()
+                {
+
+                }
             }
-            catch (Exception e)
+            catch (HttpException e)
             {
                 Console.WriteLine(e.Message);
 
