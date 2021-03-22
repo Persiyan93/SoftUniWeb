@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HTTP
+namespace HTTP.Response
 {
-    public enum SameSyteType
+    public class HtmlResponse:HttpResponse
     {
-        Lax=1,
-        Strict=2,
-        None=3
     }
 }

@@ -11,7 +11,9 @@ namespace HTTP
         public ResponseCookie(string name, string value)
             : base(name, value)
         {
-
+            this.Path = "/";
+            this.SameSyte = SameSyteType.Lax;
+            this.Expires = DateTime.UtcNow.AddDays(10);
         }
 
         public string Path { get; set; }
@@ -41,7 +43,7 @@ namespace HTTP
             }
             if (!string.IsNullOrWhiteSpace(this.Path))
             {
-                cookieBuilder.Append($"; Domain=" + this.Domain);
+                cookieBuilder.Append($"; Path=" + this.Path);
             }
             if (this.Secure)
             {

@@ -4,17 +4,19 @@ using System.Text;
 
 namespace HTTP
 {
-    internal class HttpRequest
+    public  class HttpRequest
     {
 
         private string requestAsString;
         public HttpRequest(string requestAsString)
         {
+            this.Cookies = new List<Cookie>();
+            this.Headers = new List<Header>();
             if (string.IsNullOrWhiteSpace(requestAsString))
             {
                 return;
             }
-            this.Cookies = new List<Cookie>();
+           
             this.requestAsString = requestAsString;
             var resultLines = requestAsString.Split(new[] { HtttpConstants.NewLine }, StringSplitOptions.None);
             var httpinfoHeader = resultLines[0];
@@ -24,6 +26,10 @@ namespace HTTP
                 throw new HttpException("Invalid Http headr line");
 
             }
+
+
+            // Set Method Type
+
             var httpMethod = infoheaderParts[0];
             this.MethodType = httpMethod switch
             {
@@ -35,11 +41,13 @@ namespace HTTP
 
             };
 
+            // Set Path
             this.Path = infoheaderParts[1];
 
-            var httpVersion = infoheaderParts[2];
 
-            this.Version = httpVersion switch
+            //Set Http Version
+            var httpVersion = infoheaderParts[2];
+             this.Version = httpVersion switch
             {
                 "HTTP/1.0" => HttpVersionType.Http10,
                 "HTTP/1.1" => HttpVersionType.Http11,
@@ -92,6 +100,14 @@ namespace HTTP
             
 
         }
+        //private void ParserData(IDictionary<string,string> output,string input)
+        //{
+        //    var dataParts = input.Split("&", StringSplitOptions.RemoveEmptyEntries);
+        //    for (int i = 0; i < length; i++)
+        //    {
+
+        //    }
+        //}
         public IList<Cookie> Cookies { get; set; }
         public IList<Header> Headers { get; set; }
         public HttpMethodType MethodType { get; set; }
@@ -99,5 +115,6 @@ namespace HTTP
         public HttpVersionType Version { get; set; }
 
         public string Body { get; set; }
+        public IDictionary<string,string> SessionData { get; set; }
     }
 }

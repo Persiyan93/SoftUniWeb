@@ -8,10 +8,11 @@ namespace HTTP
 {
     public class HttpResponse
     {
-        public HttpResponse(HttpResponseCode code,byte [] body):
+        public HttpResponse(HttpResponseCode statusCode,byte [] body):
             this()
         {
-            this.responseCode = code;
+            this.Version = HttpVersionType.Http10;
+            this.responseCode = statusCode;
             this.Body = body;
             if (body?.Length>0)
             {
@@ -25,6 +26,7 @@ namespace HTTP
             this.Headers = new List<Header>();
             this.Cookies = new List<Cookie>();
         }
+        
         public HttpVersionType Version { get; set; }
 
         public IList<Header> Headers { get; set; }
@@ -42,8 +44,9 @@ namespace HTTP
                 HttpVersionType.Http10 => "HTTP/1.0",
                 HttpVersionType.Http11 => "HTTP/1.1",
                 HttpVersionType.Http20 => "HTTP/2.0",
+                _=>"HTTP/1.0",
             };
-            responseBuilder.Append($"{httpVersionAsString} {(int)responseCode} {responseCode.ToString()}" + HtttpConstants.NewLine);
+            responseBuilder.Append($"{httpVersionAsString} {(int)this.responseCode} {this.responseCode.ToString()}" + HtttpConstants.NewLine);
             foreach (var header in this.Headers)
             {
                 responseBuilder.Append(header.ToString() + HtttpConstants.NewLine);
@@ -58,6 +61,6 @@ namespace HTTP
         }
 
     }
-
+     
 
 }
