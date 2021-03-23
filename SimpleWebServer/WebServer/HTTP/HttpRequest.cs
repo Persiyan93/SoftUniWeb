@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Web;
 
 namespace HTTP
 {
@@ -13,6 +14,7 @@ namespace HTTP
             this.Cookies = new List<Cookie>();
             this.Headers = new List<Header>();
             this.SessionData = new Dictionary<string, string>();
+            this.FormData = new Dictionary<string, string>();
             if (string.IsNullOrWhiteSpace(requestAsString)) 
             {
                 return;
@@ -97,6 +99,14 @@ namespace HTTP
 
             }
             this.Body = bodyBuilder.ToString().TrimEnd('\r', '\n');
+            var bodyParts = this.Body.Split("&",StringSplitOptions.RemoveEmptyEntries);
+            foreach (var bodyPart in bodyParts)
+            {
+                var parameterParts = bodyPart.Split("=", 2, StringSplitOptions.None);
+                this.FormData.Add(
+                    HttpUtility.UrlEncode( parameterParts[0]),
+                    HttpUtility.UrlEncode( parameterParts[1]));
+            }
 
             
 
@@ -110,5 +120,7 @@ namespace HTTP
 
         public string Body { get; set; }
         public IDictionary<string,string> SessionData { get; set; }
+        public IDictionary<string,string> FormData { get; set; }
+
     }
 }
