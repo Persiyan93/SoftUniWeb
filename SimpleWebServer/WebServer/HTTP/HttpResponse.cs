@@ -11,7 +11,7 @@ namespace HTTP
         public HttpResponse(HttpResponseCode statusCode,byte [] body):
             this()
         {
-            this.Version = HttpVersionType.Http10;
+            
             this.responseCode = statusCode;
             this.Body = body;
             if (body?.Length>0)
@@ -20,7 +20,7 @@ namespace HTTP
             }
         }
 
-        public HttpResponse()
+        protected HttpResponse()
         {
             this.Version = HttpVersionType.Http10;
             this.Headers = new List<Header>();

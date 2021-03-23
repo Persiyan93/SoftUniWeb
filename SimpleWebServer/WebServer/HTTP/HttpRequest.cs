@@ -12,7 +12,8 @@ namespace HTTP
         {
             this.Cookies = new List<Cookie>();
             this.Headers = new List<Header>();
-            if (string.IsNullOrWhiteSpace(requestAsString))
+            this.SessionData = new Dictionary<string, string>();
+            if (string.IsNullOrWhiteSpace(requestAsString)) 
             {
                 return;
             }
@@ -100,14 +101,7 @@ namespace HTTP
             
 
         }
-        //private void ParserData(IDictionary<string,string> output,string input)
-        //{
-        //    var dataParts = input.Split("&", StringSplitOptions.RemoveEmptyEntries);
-        //    for (int i = 0; i < length; i++)
-        //    {
-
-        //    }
-        //}
+     
         public IList<Cookie> Cookies { get; set; }
         public IList<Header> Headers { get; set; }
         public HttpMethodType MethodType { get; set; }

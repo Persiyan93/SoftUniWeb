@@ -6,7 +6,17 @@ using System.Threading.Tasks;
 
 namespace HTTP
 {
-    class Route
+    public class Route
     {
+        public Route(string path ,HttpMethodType method,Func<HttpRequest,HttpResponse> action)
+        {
+            this.Path = path;
+            this.MethodType = method;
+            this.Action = action;
+        }
+        public string Path { get; set; }
+
+        public HttpMethodType MethodType { get; set; }
+        public Func<HttpRequest,HttpResponse> Action { get; set; }
     }
 }

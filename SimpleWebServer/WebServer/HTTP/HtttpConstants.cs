@@ -12,6 +12,7 @@ namespace HTTP
     public static class HtttpConstants
     {
         public const string NewLine = "\r\n";
+        public const string SessionCookieName = "sid";
         
     }
 }
