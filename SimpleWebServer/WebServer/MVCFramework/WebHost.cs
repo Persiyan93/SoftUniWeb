@@ -9,7 +9,7 @@ namespace MVCFramework
 {
     public static class WebHost
     {
-        public static async StartAsync(IMvcApplication application)
+        public static async Task StartAsync(IMvcApplication application)
         {
             var routeTable = new List<Route>();
             application.ConfigureServices();

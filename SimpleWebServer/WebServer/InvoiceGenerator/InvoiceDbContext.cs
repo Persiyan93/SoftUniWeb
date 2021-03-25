@@ -2,7 +2,8 @@
 
 namespace InvoiceGenerator
 {
-    public class Class1
+    public class InvoiceDbContext
+
     {
     }
 }
