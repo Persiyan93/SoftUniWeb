@@ -8,6 +8,6 @@ namespace MVCFramework
 {
     public interface IViewEngine
     {
-        string GetHtml(string temlate );
+        string GetHtml(string temlate ,object model );
     }
 }
