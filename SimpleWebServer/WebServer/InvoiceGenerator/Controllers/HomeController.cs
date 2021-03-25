@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Controllers
 {
-    class CompanyController:Controller
+    class HomeController:Controller
     {
-        public HttpResponse CreateCompany()
+        public HttpResponse HomeView()
         {
-            return this.View();
+           return this.View();
         }
     }
 }

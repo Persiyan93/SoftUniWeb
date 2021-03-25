@@ -12,7 +12,7 @@ namespace InvoiceGenerator
     {
         public void Configure(IList<Route> routTable)
         {
-            routTable.Add(new Route(dasdasd));
+            routTable.Add(new Route("/Companies/CreateCompany",HttpMethodType.Get,new CompanyController().CreateCompany));
         }
 
         public void ConfigureServices()

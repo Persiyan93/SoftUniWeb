@@ -12,7 +12,7 @@ namespace MVCFramework
         {
             var layout = File.ReadAllText("  ");
             var controllerName = this.GetType().Name.Replace("Controller",string.Empty);
-                 var html = File.ReadAllText("Views/"+controllerName+"/"+viewName);
+             var html = File.ReadAllText("Views/"+controllerName+"/"+viewName);
             var bodyLayout = layout.Replace("  ",html);
             return new HtmlResponse( bodyLayout);
 
