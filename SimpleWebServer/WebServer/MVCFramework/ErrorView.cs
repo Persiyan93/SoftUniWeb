@@ -8,19 +8,11 @@ namespace MVCFramework
 {
     class ErrorView : IView
     {
-        public string GetHtml(string message)
-        {
-            return message;
-        }
-
         public string GetHtml()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
-        public string GetHtml(object model)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

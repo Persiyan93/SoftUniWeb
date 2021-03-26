@@ -52,14 +52,17 @@ namespace HTTP
                     byte[] requestBytes = new byte[1000];
                     int bytesRead = await networkStream.ReadAsync(requestBytes, 0, requestBytes.Length);
                     string requestAsString = Encoding.UTF8.GetString(requestBytes, 0, bytesRead);
+                    Console.WriteLine(requestAsString);
                    
                     var request = new HttpRequest(requestAsString);
                     
                     var route = this.routeTable.Where(x => x.Path == request.Path && x.MethodType == request.MethodType).FirstOrDefault();
+                    Console.WriteLine(request.QueryData);
                     HttpResponse response;
                     if (route == null)
                     {
-                        Console.Write(request.MethodType);
+                        Console.WriteLine(request.MethodType);
+                        Console.WriteLine(requestAsString);
                         return;
                         
                        // response = new HttpResponse(HttpResponseCode.NotFound, new byte[0]);

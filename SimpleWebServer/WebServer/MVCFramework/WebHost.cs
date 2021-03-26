@@ -15,7 +15,7 @@ namespace MVCFramework
             application.ConfigureServices();
             application.Configure(routeTable);
 
-            var httpServer = new HttpServer(80, routeTable);
+            var httpServer = new HttpServer(90, routeTable);
             await httpServer.StratAsync();
         }
     }

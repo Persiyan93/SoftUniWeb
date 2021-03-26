@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Web;
 
@@ -46,6 +47,15 @@ namespace HTTP
 
             // Set Path
             this.Path = infoheaderParts[1];
+            if (this.Path.Contains("?"))
+            {
+                var parts = this.Path.Split("?", 2);
+                var queryString =parts[1] ;
+                this.Path =parts[0];
+                this.QueryData = new Dictionary<string, string>();
+                DataParser(QueryData, queryString);
+
+            }
 
 
             //Set Http Version
@@ -99,17 +109,22 @@ namespace HTTP
 
             }
             this.Body = bodyBuilder.ToString().TrimEnd('\r', '\n');
-            var bodyParts = this.Body.Split("&",StringSplitOptions.RemoveEmptyEntries);
-            foreach (var bodyPart in bodyParts)
-            {
-                var parameterParts = bodyPart.Split("=", 2, StringSplitOptions.None);
-                this.FormData.Add(
-                    HttpUtility.UrlEncode( parameterParts[0]),
-                    HttpUtility.UrlEncode( parameterParts[1]));
-            }
+            DataParser(this.FormData, this.Body);
+         
 
             
 
+        }
+        private void DataParser(IDictionary<string,string> output,string input)
+        {
+            var inputParts = input.Split("&", StringSplitOptions.RemoveEmptyEntries);
+            foreach (var inputPart in inputParts)
+            {
+                var parameterParts = inputPart.Split("=", 2, StringSplitOptions.None);
+                output.Add(
+                    HttpUtility.UrlEncode(parameterParts[0]),
+                    HttpUtility.UrlEncode(parameterParts[1]));
+            }
         }
      
         public IList<Cookie> Cookies { get; set; }
@@ -121,6 +136,8 @@ namespace HTTP
         public string Body { get; set; }
         public IDictionary<string,string> SessionData { get; set; }
         public IDictionary<string,string> FormData { get; set; }
+        public IDictionary<string,string> QueryData{ get; set; }
+
 
     }
 }

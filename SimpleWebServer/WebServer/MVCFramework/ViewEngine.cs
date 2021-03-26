@@ -73,12 +73,7 @@ namespace MVCFramework
             memoryStream.Seek(0, SeekOrigin.Begin);
             var assemblyByteArray = memoryStream.ToArray();
             var appViewAssembly = Assembly.Load(assemblyByteArray);
-            var assemblyTypes = appViewAssembly.GetTypes();
-            foreach (var type in assemblyTypes)
-            {
-                Console.Write(type);
-            }
-            var appViewCodeType = appViewAssembly.GetType("AppViewNamespace.AppViewCode");
+             var appViewCodeType = appViewAssembly.GetType("AppViewNamespace.AppViewCode");
             var appViewInstance = Activator.CreateInstance(appViewCodeType) as IView;
             return appViewInstance;
 
