@@ -13,4 +13,16 @@
     <ProjectReference Include="..\MVCFramework\MVCFramework.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Views\Common\Layout.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\Companies\CreateCompany.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\Home\HomeIndex.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

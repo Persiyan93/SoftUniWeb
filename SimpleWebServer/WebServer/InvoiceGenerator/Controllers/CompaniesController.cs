@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace InvoiceGenerator.Controllers
 {
-    class CompanyController:Controller
+    class CompaniesController:Controller
     {
-        public HttpResponse CreateCompany()
+        public HttpResponse CreateCompany(HttpRequest request)
         {
             return this.View();
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MVCFramework
 {
-    public interface Iview
+    public interface IView
     {
         string GetHtml();
     }

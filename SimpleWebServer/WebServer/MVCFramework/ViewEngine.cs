@@ -18,49 +18,68 @@ namespace MVCFramework
         public string GetHtml(string template, object model)
         {
             var cSharpCode = GenerateCSharpCode(template);
-            var code = @$"Using System;
-                using System.Text;
-                using System.Linq;
-                using System.Collections.Generic;
-                using SIS.MvcFramework;
-                public class AppViewCode : IView
+            var code = @$"
+            using MVCFramework;
+            using System;
+            using System.Collections.Generic;
+            using System.Linq;
+            using System.Text;
+                namespace AppViewNamespace
+                {{
+                 public class AppViewCode:IView
                   {{
-                         public string GetHtml(object model, string user)
+                         public string GetHtml()
                    {{
-                            var html=new stringBuilder();
+                            
+                            var html=new StringBuilder();   
                              {cSharpCode}
-                            return html.toString();
+                            return html.ToString();
                      }}
+                        }}     
                     }}  ";
 
-            Iview view = GetInstanceFromCode(code, model);
+            IView view = GetInstanceFromCode(code, model);
             return view.GetHtml();
         }
 
-        private Iview GetInstanceFromCode(string code, object model)
+        private IView GetInstanceFromCode(string code, object model)
         {
-
-            var compilation = CSharpCompilation.Create("AppView", options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            compilation.AddSyntaxTrees(syntaxTree);
-            compilation.AddReferences(MetadataReference.CreateFromFile(typeof(Iview).Assembly.Location))
-                .AddReferences(MetadataReference.CreateFromFile(typeof(Object).Assembly.Location));
-            var libraries = Assembly.Load(new AssemblyName("netstandart")).GetReferencedAssemblies();
+            var compilation = CSharpCompilation.Create("AppView")
+           .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            
+           compilation=compilation.AddReferences(MetadataReference.CreateFromFile(typeof(IView).Assembly.Location))
+          .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
+           compilation= compilation.AddSyntaxTrees(syntaxTree);
+           
+            var libraries = Assembly.Load(new AssemblyName("netstandard")).GetReferencedAssemblies();
+            if (model != null)
+            {
+                compilation = compilation.AddReferences(MetadataReference.CreateFromFile(model.GetType().Assembly.Location));
+            }
             foreach (var library in libraries)
             {
-                compilation.AddReferences(MetadataReference.CreateFromFile(Assembly.Load(library).Location));
+                compilation=compilation.AddReferences(MetadataReference.CreateFromFile(Assembly.Load(library).Location));
             }
             using var memoryStream = new MemoryStream();
-            var Compilationresult = compilation.Emit(memoryStream);
-            if (!Compilationresult.Success)
+            var compilationResult = compilation.Emit(memoryStream);
+            if (!compilationResult.Success)
             {
-
+                Console.WriteLine(
+                  compilationResult.Diagnostics
+                  .Where(x => x.Severity == DiagnosticSeverity.Error)
+                  .Select(x => x.GetMessage()));
             }
             memoryStream.Seek(0, SeekOrigin.Begin);
             var assemblyByteArray = memoryStream.ToArray();
             var appViewAssembly = Assembly.Load(assemblyByteArray);
+            var assemblyTypes = appViewAssembly.GetTypes();
+            foreach (var type in assemblyTypes)
+            {
+                Console.Write(type);
+            }
             var appViewCodeType = appViewAssembly.GetType("AppViewNamespace.AppViewCode");
-            var appViewInstance = Activator.CreateInstance(appViewCodeType) as Iview;
+            var appViewInstance = Activator.CreateInstance(appViewCodeType) as IView;
             return appViewInstance;
 
 

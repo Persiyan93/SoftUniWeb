@@ -1,4 +1,4 @@
-﻿]using MVCFramework;
+﻿using MVCFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;

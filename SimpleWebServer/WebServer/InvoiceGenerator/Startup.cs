@@ -1,4 +1,5 @@
 ﻿using HTTP;
+using InvoiceGenerator.Controllers;
 using MVCFramework;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,15 @@ namespace InvoiceGenerator
     {
         public void Configure(IList<Route> routTable)
         {
-            routTable.Add(new Route("/Companies/CreateCompany",HttpMethodType.Get,new CompanyController().CreateCompany));
+            routTable.Add(new Route("/",HttpMethodType.Get,new HomeController().HomeIndex));
+            routTable.Add(new Route("/Companies/CreateCompany",HttpMethodType.Get,new CompaniesController().CreateCompany));
         }
 
         public void ConfigureServices()
         {
     
-            var db = new InvoiceDbContext();
-            db.Database.EnsureCreated();
+            //var db = new InvoiceDbContext();
+            //db.Database.EnsureCreated();
         }
     }
 }

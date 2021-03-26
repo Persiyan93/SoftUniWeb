@@ -10,7 +10,7 @@ namespace InvoiceGenerator.Controllers
 {
     class HomeController:Controller
     {
-        public HttpResponse HomeView()
+        public HttpResponse HomeIndex(HttpRequest request)
         {
            return this.View();
         }

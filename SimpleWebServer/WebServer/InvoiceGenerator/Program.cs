@@ -1,12 +1,15 @@
-﻿using System;
+﻿using MVCFramework;
+using System;
+using System.Threading.Tasks;
 
 namespace InvoiceGenerator
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+          await  WebHost.StartAsync(new Startup());
+           
         }
     }
 }
