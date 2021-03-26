@@ -14,7 +14,7 @@ namespace InvoiceGenerator.Controllers
        public  HttpResponse FavIcon(HttpRequest request)
         {
 
-            return new  FileResponse()
+            return null;
         }
     }
 }
