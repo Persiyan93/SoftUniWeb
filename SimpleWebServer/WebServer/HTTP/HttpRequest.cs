@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -12,6 +13,8 @@ namespace HTTP
         private string requestAsString;
         public HttpRequest(string requestAsString)
         {
+           
+           
             this.Cookies = new List<Cookie>();
             this.Headers = new List<Header>();
             this.SessionData = new Dictionary<string, string>();
@@ -20,7 +23,7 @@ namespace HTTP
             {
                 return;
             }
-           
+            
             this.requestAsString = requestAsString;
             var resultLines = requestAsString.Split(new[] { HtttpConstants.NewLine }, StringSplitOptions.None);
             var httpinfoHeader = resultLines[0];
@@ -30,7 +33,7 @@ namespace HTTP
                 throw new HttpException("Invalid Http headr line");
 
             }
-
+           
 
             // Set Method Type
 
@@ -44,6 +47,7 @@ namespace HTTP
                 _ => HttpMethodType.Unknown
 
             };
+            
 
             // Set Path
             this.Path = infoheaderParts[1];
@@ -57,7 +61,7 @@ namespace HTTP
 
             }
 
-
+          
             //Set Http Version
             var httpVersion = infoheaderParts[2];
              this.Version = httpVersion switch
@@ -67,7 +71,7 @@ namespace HTTP
                 "HTTP/2.0" => HttpVersionType.Http20,
                 _ => HttpVersionType.Http11
             };
-
+         
             var bodyBuilder = new StringBuilder();
             bool isInHeader = true;
             for (int i = 1 ; i < resultLines.Length; i++)
@@ -108,11 +112,13 @@ namespace HTTP
                 
 
             }
+          
             this.Body = bodyBuilder.ToString().TrimEnd('\r', '\n');
             DataParser(this.FormData, this.Body);
-         
+          
 
-            
+
+
 
         }
         private void DataParser(IDictionary<string,string> output,string input)

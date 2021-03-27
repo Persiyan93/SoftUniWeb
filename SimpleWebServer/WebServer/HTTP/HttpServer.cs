@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HTTP
 {
     public class HttpServer : IHttpServer
     {
+        private Object lockObject;
         private TcpListener tcpListener;
         private readonly IList<Route> routeTable;
         private readonly Dictionary<string, Dictionary<string, string>> sessions;
@@ -17,6 +21,7 @@ namespace HTTP
 
         public HttpServer(int port, IList<Route> routeTable)
         {
+            lockObject = new Object();
             this.routeTable = routeTable;
             this.tcpListener = new TcpListener(IPAddress.Loopback, port);
             this.sessions = new Dictionary<string, Dictionary<string, string>>();
@@ -32,49 +37,85 @@ namespace HTTP
             this.tcpListener.Stop();
         }
 
+
+
         public async Task StratAsync()
         {
             this.tcpListener.Start();
             while (true)
             {
                 TcpClient client = await tcpListener.AcceptTcpClientAsync();
-                Task.Run(() => ProcessClientAsync(client));
+                await Task.Run(() => ProcessClientAsync(client));
 
             }
         }
+
+
+
+
         private async void ProcessClientAsync(TcpClient client)
         {
+
             NetworkStream networkStream = client.GetStream();
+
             using (networkStream)
             {
                 try
                 {
-                    byte[] requestBytes = new byte[1000];
-                    int bytesRead = await networkStream.ReadAsync(requestBytes, 0, requestBytes.Length);
-                    string requestAsString = Encoding.UTF8.GetString(requestBytes, 0, bytesRead);
+                    var stopWatch = new Stopwatch();
+                    stopWatch.Start();
+                    byte[] requestBytes = new byte[4096];
+                    string requestAsString = null;
+                    using MemoryStream memoryStream = new MemoryStream();
+                    while (true)
+                    {
+                        int bytesRead = await networkStream.ReadAsync(requestBytes, 0, requestBytes.Length);
+                          await memoryStream.WriteAsync(requestBytes, 0, bytesRead);
+                        if (bytesRead<requestBytes.Length)
+                        {
+                            break;
+                        }
+
+
+                    }
+
+                    Console.WriteLine("Finish with Reading " + stopWatch.ElapsedMilliseconds);
+
+                    requestAsString = Encoding.UTF8.GetString(memoryStream.ToArray());
+
+
+                    Console.WriteLine("Before Encoding   " + stopWatch.ElapsedMilliseconds);
                     Console.WriteLine(requestAsString);
-                   
+                    Console.WriteLine("Before parceing Request    " + stopWatch.ElapsedMilliseconds);
                     var request = new HttpRequest(requestAsString);
-                    
+                    Console.WriteLine("Aftere Parceing of Request    " + stopWatch.ElapsedMilliseconds);
+
                     var route = this.routeTable.Where(x => x.Path == request.Path && x.MethodType == request.MethodType).FirstOrDefault();
                     Console.WriteLine(request.QueryData);
                     HttpResponse response;
+
                     if (route == null)
                     {
+
                         Console.WriteLine(request.MethodType);
                         Console.WriteLine(requestAsString);
+                        Console.WriteLine("Finish with This Cient  " + stopWatch.ElapsedMilliseconds);
                         return;
-                        
-                       // response = new HttpResponse(HttpResponseCode.NotFound, new byte[0]);
+
+                        // response = new HttpResponse(HttpResponseCode.NotFound, new byte[0]);
+
                     }
+
                     else
                     {
+                        Console.WriteLine("Before Action      " + stopWatch.ElapsedMilliseconds);
                         response = route.Action(request);
+                        Console.WriteLine("After action      " + stopWatch.ElapsedMilliseconds);
                     }
 
 
                     response.Headers.Add(new Header("Server", "Simple Server"));
-                    
+
 
                     string newSessionId = null;
                     var sessionCookie = request.Cookies.FirstOrDefault(x => x.Name == HtttpConstants.SessionCookieName);
@@ -95,8 +136,14 @@ namespace HTTP
 
                     }
                     byte[] responseBytes = Encoding.UTF8.GetBytes(response.ToString());
+
+                    Console.WriteLine(stopWatch.ElapsedMilliseconds);
                     await networkStream.WriteAsync(responseBytes, 0, responseBytes.Length);
-                    await networkStream.WriteAsync(response.Body, 0, response.Body.Length);
+                    Console.WriteLine(stopWatch.ElapsedMilliseconds);
+                    await networkStream.WriteAsync(response.Body, responseBytes.Length, response.Body.Length);
+
+                    stopWatch.Stop();
+                    Console.WriteLine("Finish with This Cient  " + stopWatch.ElapsedMilliseconds);
 
 
                 }

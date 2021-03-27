@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Models;
 using System;
 
 namespace Data
@@ -15,6 +16,11 @@ namespace Data
 
 
         }
+        public DbSet<Company> Companies { get; set; }
+
+        public DbSet<Address> Addresses { get; set; }
+
+        public DbSet<Invoice> Invoices { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

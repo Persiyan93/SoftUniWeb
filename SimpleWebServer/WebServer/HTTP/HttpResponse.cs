@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,11 @@ namespace HTTP
         public byte[] Body { get; set; }
         public override string ToString()
         {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+           
+            Console.WriteLine("Watch inside httpResponse      " + stopWatch.ElapsedMilliseconds);
+
 
             var responseBuilder = new StringBuilder();
             var httpVersionAsString = this.Version switch
@@ -57,6 +63,8 @@ namespace HTTP
                 responseBuilder.Append("Set-Cookie: " + cookie.ToString() + HtttpConstants.NewLine);   
             }
             responseBuilder.Append(HtttpConstants.NewLine);
+            stopWatch.Stop();
+            Console.WriteLine("Watch in the end of HttpResponse     " + stopWatch.ElapsedMilliseconds);
             return responseBuilder.ToString();
         }
 

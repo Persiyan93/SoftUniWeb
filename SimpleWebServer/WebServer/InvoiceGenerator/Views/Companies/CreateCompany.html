@@ -1,13 +1,33 @@
 ﻿<h1>Invoice Generator</h1>
 
-<form method="GET" action="Companies/CreateCompany">
-    <label for="companyName">Name of Company</label>
-    <input type="text" name="companyName">
-    <label for="vatNumber">VAT number</label>
-    <input type="text" name="vatNumber">
-    <label for="address">Company Address</label>
-    <input type="text" name="companyaddress">
-    <label for="nameOfManager">Name of manager</label>
-    <input type="text" name="nameOfManager">
-    <button type="submit">Create</button>
+<form method="POST" action="Companies/CreateCompany">
+
+    <p>
+        <label for="companyName">Name of Company</label>
+        <input type="text" name="companyName">
+    </p>
+    <p>
+        <label for="vatNumber">VAT number</label>
+        <input type="text" name="vatNumber">
+    </p>
+    <p>
+        <label for="identificationNumber">Identification Number</label>
+        <input type="text" name="identificationNumber">
+    </p>
+    <p>
+        <label for="address">Company Address</label>
+        <input type="text" name="companyAddress">
+    </p>
+    <p>
+        <label for="nameOfManager">Name of manager</label>
+        <input type="text" name="nameOfManager">
+    </p>
+    <p><input type="checkbox" name="IsForeignCompany"> <label for="IsForeignCompany"> Is it foreign Company</label></p>
+
+    <p><button type="submit">Create</button></p>
+
+
+
+
+
 </form>

@@ -14,5 +14,14 @@ namespace InvoiceGenerator.Controllers
         {
             return this.View();
         }
+        
+        public HttpResponse PostCreateCompany(HttpRequest request)
+        {
+            foreach (var data in request.FormData)
+            {
+                Console.Write(data.Key + "  =>" + data.Value);
+            }
+            return null;
+        }
     }
 }

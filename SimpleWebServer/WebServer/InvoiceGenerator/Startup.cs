@@ -15,6 +15,7 @@ namespace InvoiceGenerator
         {
             routTable.Add(new Route("/",HttpMethodType.Get,new HomeController().HomeIndex));
             routTable.Add(new Route("/Companies/CreateCompany",HttpMethodType.Get,new CompaniesController().CreateCompany));
+            routTable.Add(new Route("/Companies/CreateCompany",HttpMethodType.Post,new CompaniesController().PostCreateCompany));
         }
 
         public void ConfigureServices()
