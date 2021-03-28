@@ -45,7 +45,7 @@ namespace HTTP
             while (true)
             {
                 TcpClient client = await tcpListener.AcceptTcpClientAsync();
-                await Task.Run(() => ProcessClientAsync(client));
+                ProcessClientAsync(client);
 
             }
         }
@@ -56,9 +56,9 @@ namespace HTTP
         private async void ProcessClientAsync(TcpClient client)
         {
 
-            NetworkStream networkStream = client.GetStream();
+           
 
-            using (networkStream)
+            using (NetworkStream networkStream = client.GetStream())
             {
                 try
                 {
@@ -79,9 +79,7 @@ namespace HTTP
 
                     }
 
-                    Console.WriteLine("Finish with Reading " + stopWatch.ElapsedMilliseconds);
-
-                    requestAsString = Encoding.UTF8.GetString(memoryStream.ToArray());
+                 requestAsString = Encoding.UTF8.GetString(memoryStream.ToArray());
 
 
                     Console.WriteLine("Before Encoding   " + stopWatch.ElapsedMilliseconds);
@@ -140,10 +138,15 @@ namespace HTTP
                     Console.WriteLine(stopWatch.ElapsedMilliseconds);
                     await networkStream.WriteAsync(responseBytes, 0, responseBytes.Length);
                     Console.WriteLine(stopWatch.ElapsedMilliseconds);
-                    await networkStream.WriteAsync(response.Body, responseBytes.Length, response.Body.Length);
+                    if (response.Body!=null)
+                    {
+                        await networkStream.WriteAsync(response.Body, 0, response.Body.Length);
+                    }
+                    
 
                     stopWatch.Stop();
                     Console.WriteLine("Finish with This Cient  " + stopWatch.ElapsedMilliseconds);
+                    client.Close();
 
 
                 }

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MVCFramework
+namespace InvoiceGenerator.ViewModels
 {
-    public interface IView
+    public class Test
     {
-        string GetHtml(object model);
+        public int Year { get; set; }
     }
 }

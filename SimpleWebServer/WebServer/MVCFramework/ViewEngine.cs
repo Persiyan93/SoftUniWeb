@@ -15,25 +15,26 @@ namespace MVCFramework
     public class ViewEngine : IViewEngine
     {
 
-        public Stopwatch stopWatch { get; set; }
+       
         public string GetHtml(string template, object model)
         {
-             this.stopWatch = new Stopwatch();
-            stopWatch.Start();
+            
             var cSharpCode = GenerateCSharpCode(template);
+            var typeName = model?.GetType().FullName ?? "object";
+            Console.WriteLine(typeName);
             var code = @$"
             using MVCFramework;
-            //using System;
-            //using System.Collections.Generic;
-            //using System.Linq;
+            using System;
+            using System.Collections.Generic;
+            using System.Linq;
             using System.Text;
                 namespace AppViewNamespace
                 {{
                  public class AppViewCode:IView
                   {{
-                         public string GetHtml()
+                         public string GetHtml(object model)
                    {{
-                            
+                            var Model=model as {typeName};
                             var html=new StringBuilder();   
                              {cSharpCode}
                             return html.ToString();
@@ -42,22 +43,29 @@ namespace MVCFramework
                     }}  ";
 
             IView view = GetInstanceFromCode(code, model);
-            stopWatch.Stop();
+           
             
-            Console.WriteLine("Watch inside VieEngine     " + stopWatch.ElapsedMilliseconds);
-            return view.GetHtml();
+           
+            return view.GetHtml(model);
         }
 
         private IView GetInstanceFromCode(string code, object model)
         {
-            Console.WriteLine("Begin of GetInstasnceFormCode     " + stopWatch.ElapsedMilliseconds);
+        
 
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var compilation = CSharpCompilation.Create("AppView")
-           .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-            
-           compilation=compilation.AddReferences(MetadataReference.CreateFromFile(typeof(IView).Assembly.Location))
-          .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
+                    .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+            compilation = compilation
+                     .AddReferences(MetadataReference.CreateFromFile(typeof(IView).Assembly.Location))
+                     .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
+            if (model!=null)
+            {
+                compilation=compilation.AddReferences(MetadataReference.CreateFromFile(model.GetType().Assembly.Location));
+            }
+
+                     
            compilation= compilation.AddSyntaxTrees(syntaxTree);
            
             var libraries = Assembly.Load(new AssemblyName("netstandard")).GetReferencedAssemblies();
@@ -69,10 +77,10 @@ namespace MVCFramework
             {
                 compilation=compilation.AddReferences(MetadataReference.CreateFromFile(Assembly.Load(library).Location));
             }
-            Console.WriteLine("Before emit   " + stopWatch.ElapsedMilliseconds);
+           
             using var memoryStream = new MemoryStream();
             var compilationResult = compilation.Emit(memoryStream);
-            Console.WriteLine("After emit   " + stopWatch.ElapsedMilliseconds);
+            
 
             if (!compilationResult.Success)
             {
@@ -86,7 +94,7 @@ namespace MVCFramework
             var appViewAssembly = Assembly.Load(assemblyByteArray);
              var appViewCodeType = appViewAssembly.GetType("AppViewNamespace.AppViewCode");
             var appViewInstance = Activator.CreateInstance(appViewCodeType) as IView;
-            Console.WriteLine("End of GetInstasnceFormCode     " + stopWatch.ElapsedMilliseconds);
+         
             return appViewInstance;
 
 
@@ -94,7 +102,7 @@ namespace MVCFramework
 
         private string GenerateCSharpCode(string template)
         {
-            Console.WriteLine("Begin of GeneretaCSharpCode     " + stopWatch.ElapsedMilliseconds);
+           
             var code = new StringBuilder();
             var reader = new StringReader(template);
             string line;
@@ -132,7 +140,7 @@ namespace MVCFramework
 
 
             }
-            Console.WriteLine("End of Generete CSHarpCOde     " + stopWatch.ElapsedMilliseconds);
+           
             return code.ToString();
         }
 

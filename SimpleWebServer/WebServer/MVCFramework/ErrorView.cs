@@ -8,7 +8,7 @@ namespace MVCFramework
 {
     class ErrorView : IView
     {
-        public string GetHtml()
+        public string GetHtml(object model)
         {
             return null;
         }

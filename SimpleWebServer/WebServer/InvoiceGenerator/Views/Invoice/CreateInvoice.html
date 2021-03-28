@@ -1,0 +1,24 @@
+﻿<h1>Create invoice</h1>
+<form method="POST" action="/">
+    <label for="cars">Choose a car:</label>
+    <select name="cars" id="cars">
+        <option value="volvo">Volvo</option>
+        <option value="saab">Saab</option>
+        <option value="opel">Opel</option>
+        <option value="audi">Audi</option>
+    </select>
+    <br><br>
+    <p>
+        <label for="contractNumber">Contract number</label>
+        <input type="text" name="contractNumber">
+    </p>
+    <p>
+        <label for="netPrice">Price without VAT</label>
+        <input type="text" name="netPrice">
+    </p>
+    <p>
+        <label for="vatRate">VAT Rate</label>
+        <input type="text" name="vatRate">
+    </p>
+    <input type="submit" value="Submit">
+</form>

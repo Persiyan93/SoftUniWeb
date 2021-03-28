@@ -14,9 +14,14 @@ namespace MVCFramework
             var routeTable = new List<Route>();
             application.ConfigureServices();
             application.Configure(routeTable);
-
+            
             var httpServer = new HttpServer(90, routeTable);
             await httpServer.StratAsync();
+        }
+
+        private static void AddRoutes(List<Route> routeTable, IMvcApplication application)
+        {
+            
         }
     }
 }
