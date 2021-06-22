@@ -5,6 +5,10 @@ namespace Git.Data.Models
 {
     public class Commit
     {
+        public Commit()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
         public string Id { get; set; }
 
         [Required]

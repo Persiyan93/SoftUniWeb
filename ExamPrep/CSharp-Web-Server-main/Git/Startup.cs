@@ -1,12 +1,28 @@
-﻿using System;
+﻿using Git.Data;
+using Git.Services;
+using Microsoft.EntityFrameworkCore;
+using MyWebServer;
+using MyWebServer.Controllers;
+using MyWebServer.Results.Views;
+using System;
+using System.Threading.Tasks;
 
 namespace Git
 {
     class StartUp
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
-        }
+        public static async Task Main()
+           => await HttpServer
+               .WithRoutes(routes => routes
+                   .MapStaticFiles()
+                   .MapControllers())
+               .WithServices(services => services
+                   .Add<GitDbContext>()
+                    .Add<IValidator,Validator>()
+                    .Add<IPasswordHasher,PasswordHasher>()
+                    .Add<IViewEngine, CompilationViewEngine>())
+                 .WithConfiguration<GitDbContext>(context => context
+                   .Database.Migrate())
+               .Start();
     }
 }

@@ -24,7 +24,7 @@ namespace Git.Data.Models
         [Required]
         public string Email { get; set; }
         
-        [MaxLength(20)]
+        
         [Required]
         public string Password { get; set; }
 

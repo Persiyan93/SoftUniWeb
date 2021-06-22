@@ -10,10 +10,11 @@ namespace Git.Data.Models
         public Repository()
         {
             this.Id = Guid.NewGuid().ToString();
+            this.Commits = new HashSet<Commit>();
         }
         public string Id { get; set; }
 
-        [MaxLength(20)]
+        [MaxLength(10)]
         [Required]
         public string Name { get; set; }
 

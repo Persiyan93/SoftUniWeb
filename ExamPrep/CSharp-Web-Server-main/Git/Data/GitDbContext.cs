@@ -23,5 +23,29 @@ namespace Git.Data
             }
             
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<Commit>()
+                .HasOne(x => x.Creator)
+                .WithMany(c => c.Commits)
+                .HasForeignKey(x => x.CreatorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<Commit>()
+                .HasOne(x => x.Repository)
+                .WithMany(r => r.Commits)
+                .HasForeignKey(x => x.RepositoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder
+                .Entity<Repository>()
+                .HasOne(x => x.Owner)
+                .WithMany(u => u.Repositories)
+                .HasForeignKey(x => x.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
