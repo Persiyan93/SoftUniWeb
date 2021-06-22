@@ -10,7 +10,7 @@ namespace MVCFramework
     public interface IMvcApplication
     {
 
-        void Configure(IList<Route> routTable);
+        void Configure(List<Route> routeTable);
 
         void ConfigureServices();
 

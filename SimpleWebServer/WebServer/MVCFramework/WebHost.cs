@@ -14,22 +14,20 @@ namespace MVCFramework
         {
             var routeTable = new List<Route>();
             application.ConfigureServices();
-            RegisterRoutes(routeTable, application);
+            AutomaticRegisterOfRoutes(routeTable, application);
             application.Configure(routeTable);
             var httpServer = new HttpServer(80, routeTable);
             await httpServer.StratAsync();
         }
 
-        private static void RegisterRoutes(List<Route> routeTable, IMvcApplication application)
+        private static void AutomaticRegisterOfRoutes(List<Route> routeTable, IMvcApplication application)
         {
            var  types= application.GetType().Assembly.GetTypes().Where(t => (t.IsSubclassOf(typeof(Controller)))) ;
                 
             
             foreach (var type in types)
             {
-                
-                Console.WriteLine("TypeName   " + type.GetType());
-                var actions = type.GetMethods()
+                 var actions = type.GetMethods()
                     .Where(t => !t.IsConstructor && t.IsPublic && t.DeclaringType == type);
                 foreach (var action in actions)
                 {
@@ -55,7 +53,7 @@ namespace MVCFramework
 
 
                           }));
-                    Console.WriteLine(routeTable.Count);
+             
 
                 }
             }
