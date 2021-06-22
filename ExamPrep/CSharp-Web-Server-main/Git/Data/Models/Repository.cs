@@ -1,24 +1,27 @@
-﻿namespace Git.Data.Models
+﻿using System;
+
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace Git.Data.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
-    using static DataConstants;
-
     public class Repository
     {
-        [Key]
-        [Required]
-        [MaxLength(IdMaxLength)]
-        public string Id { get; init; } = Guid.NewGuid().ToString();
+        public Repository()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
+        public string Id { get; set; }
 
+        [MaxLength(20)]
         [Required]
-        [MaxLength(RepositoryMaxName)]
         public string Name { get; set; }
 
-        public DateTime CreatedOn { get; init; } = DateTime.UtcNow;
 
+        [Required]
+        public DateTime CreatedOn { get; set; }
+
+        [Required]
         public bool IsPublic { get; set; }
 
         [Required]
@@ -26,6 +29,6 @@
 
         public User Owner { get; set; }
 
-        public IEnumerable<Commit> Commits { get; init; } = new List<Commit>();
+        public ICollection<Commit> Commits { get; set; }
     }
 }

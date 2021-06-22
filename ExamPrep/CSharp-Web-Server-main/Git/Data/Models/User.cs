@@ -1,30 +1,35 @@
-﻿namespace Git.Data.Models
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Git.Data.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
-    using static DataConstants;
-
-    public class User
+   public  class User
     {
-        [Key]
-        [Required]
-        [MaxLength(IdMaxLength)]
-        public string Id { get; init; } = Guid.NewGuid().ToString();
+        public User()
+        {
+            this.Id = Guid.NewGuid().ToString();
+            this.Repositories = new HashSet<Repository>();
+            this.Commits = new HashSet<Commit>();
+        }
+        public string Id { get; set; }
 
+        [MaxLength(20)]
         [Required]
-        [MaxLength(DefaultMaxLength)]
         public string Username { get; set; }
 
         [Required]
         public string Email { get; set; }
-
+        
+        [MaxLength(20)]
         [Required]
         public string Password { get; set; }
 
-        public IEnumerable<Repository> Repositories { get; init; } = new List<Repository>();
+        public ICollection<Repository> Repositories { get; set; }
 
-        public IEnumerable<Commit> Commits { get; init; } = new List<Commit>();
+        public ICollection<Commit> Commits { get; set; }
     }
 }
