@@ -5,19 +5,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Git.Models.Users
+namespace CarShop.Data.Models
 {
-    public class RegisterUserInputModel
+   public  class User
     {
+        public User()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
+
+        public string  Id { get; set; }
+
+        [Required]
+        [MaxLength(20)]
         public string Username { get; set; }
 
+        [Required]
         public string Email { get; set; }
 
-        [MaxLength(6)]
-        [MinLength(4)]
         [Required]
+        
         public string Password { get; set; }
 
-        public string ConfirmPassword { get; set; }
+
+        public bool IsMechanic { get; set; }
     }
 }

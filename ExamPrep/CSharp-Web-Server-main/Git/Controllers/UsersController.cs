@@ -57,6 +57,7 @@ namespace Git.Controllers
         [HttpPost]
         public HttpResponse Register(RegisterUserInputModel inputModel)
         {
+            TestValidator.IsValid(inputModel);
             var errors = validator.ValidateUser(inputModel);
             if (data.Users.Any(x=>x.Username==inputModel.Username))
             {

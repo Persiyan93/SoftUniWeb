@@ -5,19 +5,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Git.Models.Users
+namespace CarShop.WebModels.Users
 {
-    public class RegisterUserInputModel
+   public  class RegisterUserFormModel
     {
+        [Required]
+        [MinLength(4)]
+        [MaxLength(20)]
         public string Username { get; set; }
 
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
 
-        [MaxLength(6)]
-        [MinLength(4)]
         [Required]
+        [MaxLength(20)]
+        [MinLength(5)]
         public string Password { get; set; }
 
+        [Required]
         public string ConfirmPassword { get; set; }
+
+        public string UserType { get; set; }
     }
 }
