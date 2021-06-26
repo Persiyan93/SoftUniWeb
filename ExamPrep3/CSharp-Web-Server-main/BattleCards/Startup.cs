@@ -19,7 +19,7 @@
                     .MapControllers())
                 .WithServices(services => services
                     .Add<IViewEngine, CompilationViewEngine>()
-                    //.Add<IValidator, Validator>()
+                    .Add<IValidator, Validator>()
                     .Add<IPasswordHasher, PasswordHasher>()
                     //.Add<IUserService, UserService>()
                     .Add<ApplicationDbContext>())

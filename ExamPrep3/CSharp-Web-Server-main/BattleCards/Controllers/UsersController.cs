@@ -16,11 +16,13 @@ namespace BattleCards.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IPasswordHasher passwordHasher;
+        private readonly IValidator validator;
 
-        public UsersController(ApplicationDbContext context,IPasswordHasher passwordHasher)
+        public UsersController(ApplicationDbContext context,IPasswordHasher passwordHasher,IValidator validator)
         {
             this.context = context;
             this.passwordHasher = passwordHasher;
+            this.validator = validator;
         }
 
         public HttpResponse Login()
@@ -36,10 +38,11 @@ namespace BattleCards.Controllers
         [HttpPost]
         public HttpResponse Register(RegisterInputModel inputModel)
         {
-            var (isValid, errors) = Validator.IsValid(inputModel);
+          
+            var isValid = validator.IsValid(inputModel);
             if (!isValid)
             {
-                var errorMessages = errors.Select(x => x.ErrorMessage.ToString()).ToList();
+               var errorMessages = validator.GetErrorMessages().ToList() ;
                 return this.Error(errorMessages);
             }
             var userExist = context.Users

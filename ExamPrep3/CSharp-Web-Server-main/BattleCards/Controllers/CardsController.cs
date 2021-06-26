@@ -16,10 +16,12 @@ namespace BattleCards.Controllers
    public  class CardsController:Controller
     {
         private readonly ApplicationDbContext context;
+        private readonly IValidator validator;
 
-        public CardsController(ApplicationDbContext context)
+        public CardsController(ApplicationDbContext context,IValidator validator)
         {
             this.context = context;
+            this.validator = validator;
         }
         [Authorize]
         public HttpResponse Add()
@@ -31,10 +33,10 @@ namespace BattleCards.Controllers
         [Authorize]
         public HttpResponse Add(CardInputModel inputModel)
         {
-            var (isValid,errors)=Validator.IsValid(inputModel);
+            var isValid=validator.IsValid(inputModel);
             if (!isValid)
             {
-                var errorMessages = errors.Select(x => x.ErrorMessage.ToString()).ToList();
+                var errorMessages =validator.GetErrorMessages();
                 return this.Error(errorMessages);
             }
             var card = new Card

@@ -7,16 +7,27 @@ using System.Threading.Tasks;
 
 namespace BattleCards.Services
 {
-    public static class Validator
+    public  class Validator:IValidator
     {
-        public static (bool,ICollection<ValidationResult>) IsValid(object model)
+        public Validator()
+        {
+            validationResults = new List<ValidationResult>();
+        }
+        private ICollection<ValidationResult> validationResults;
+        public  bool IsValid(object model)
         {
             var validationContext = new ValidationContext(model);
-            var validationResult = new List<ValidationResult>();
+           
 
-            var result = System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, validationContext, validationResult, true);
+            var result = System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, validationContext, validationResults, true);
 
-            return (result,validationResult);
+            return (result);
+        }
+        public ICollection<string> GetErrorMessages()
+        {
+          
+           var  errorMessages = validationResults.Select(x => (string)x.ErrorMessage).ToList();
+            return errorMessages;
         }
     }
 }
